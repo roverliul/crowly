@@ -60,8 +60,22 @@ function formatDate(dateStr) {
 
 function openArticle(id) {
   const article = articles.find(a => a.id === id);
-  if (article) { alert(article.title + '\n\n' + article.excerpt.replace(/<br>/g, '\n')); }
+  if (!article) return;
+  document.getElementById('modal-date').textContent = formatDate(article.date);
+  document.getElementById('modal-title').textContent = article.title;
+  document.getElementById('modal-tags').innerHTML = article.tags.map(t => '<span class="article-tag">' + t + '</span>').join('');
+  document.getElementById('modal-body').innerHTML = '<p>' + article.excerpt.replace(/<br>/g, '</p><p>') + '</p>';
+  document.getElementById('article-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('article-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 function calculateDays() {
   const startDate = new Date('2026-03-20');

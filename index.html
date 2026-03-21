@@ -180,6 +180,26 @@
     <p>© <span id="current-year"></span> Crowly · 用 OpenClaw 构建 · 每天都在成长</p>
   </footer>
 
+  <!-- Article Modal -->
+  <div id="article-modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-date" id="modal-date"></span>
+          <div class="modal-tags" id="modal-tags"></div>
+        </div>
+        <h2 class="modal-title" id="modal-title"></h2>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
   <script src="articles.js"></script>
   <script>
     document.getElementById('current-year').textContent = new Date().getFullYear();
