@@ -26,7 +26,9 @@
       <div class="nav-links">
         <a href="#home" class="active">首页</a>
         <a href="#growth">成长</a>
-        <a href="#about">关于</a>
+        <a href="#focus">今日关注</a>
+        <a href="#industry">行业</a>
+        <a href="#thinking">思考</a>
       </div>
       <button class="search-btn" onclick="openSearch()" title="搜索">🔍</button>
       <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="切换主题">☀️</button>
@@ -76,6 +78,27 @@
         <button class="tag-btn active" onclick="filterTag('')">全部</button>
       </div>
       <div class="articles-grid" id="articles-grid"></div>
+    </section>
+
+    <!-- 今日关注 - Daily Focus -->
+    <section class="focus-section" id="focus">
+      <div class="section-title">今日关注</div>
+      <p class="section-desc">每日行业热点，融资租赁行业必读</p>
+      <div class="focus-scroll" id="focus-scroll"></div>
+    </section>
+
+    <!-- 行业动态 - Industry News -->
+    <section class="news-section" id="industry">
+      <div class="section-title">行业动态</div>
+      <p class="section-desc">政策解读、市场分析、技术趋势</p>
+      <div class="news-list" id="news-list"></div>
+    </section>
+
+    <!-- 深度思考 - Reflections -->
+    <section class="reflection-section" id="thinking">
+      <div class="section-title">深度思考</div>
+      <p class="section-desc">个人观点，深度分析</p>
+      <div class="reflection-grid" id="reflection-grid"></div>
     </section>
 
     <!-- About -->
@@ -173,7 +196,24 @@
     </div>
   </div>
 
+  <!-- Reflection Modal -->
+  <div class="modal-overlay" id="reflection-modal" onclick="closeReflectionModal(event)">
+    <div class="modal-box reflection-modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeReflectionModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-meta">
+        <span class="modal-date" id="reflection-modal-date"></span>
+        <div class="modal-tags" id="reflection-modal-tags"></div>
+      </div>
+      <h2 class="modal-title" id="reflection-modal-title"></h2>
+      <hr class="modal-divider">
+      <div class="modal-body" id="reflection-modal-body"></div>
+    </div>
+  </div>
+
   <script src="articles.js"></script>
+  <script src="content.js"></script>
   <script>
     // ── Theme ────────────────────────────────────────────
     (function() {
@@ -244,6 +284,66 @@
         </div>`).join('');
     }
 
+    // ── Daily Focus ────────────────────────────────────
+    function renderFocus() {
+      const container = document.getElementById('focus-scroll');
+      if (!container || !window.dailyFocus) return;
+      container.innerHTML = dailyFocus.slice(0, 3).map(item => `
+        <div class="focus-card">
+          <div class="focus-date">${fmtDate(item.date)}</div>
+          <div class="focus-tag">${item.tag}</div>
+          <h3 class="focus-title">${item.title}</h3>
+          <p class="focus-summary">${item.summary}</p>
+        </div>`).join('');
+    }
+
+    // ── Industry News ───────────────────────────────────
+    function renderNews() {
+      const container = document.getElementById('news-list');
+      if (!container || !window.industryNews) return;
+      container.innerHTML = industryNews.slice(0, 5).map(item => `
+        <div class="news-item">
+          <div class="news-date-col">
+            <span class="news-date">${fmtDate(item.date)}</span>
+            <span class="news-tag">${item.tag}</span>
+          </div>
+          <div class="news-content-col">
+            <h3 class="news-title">${item.title}</h3>
+            <p class="news-summary">${item.summary}</p>
+          </div>
+        </div>`).join('');
+    }
+
+    // ── Reflections ───────────────────────────────────
+    function openReflection(index) {
+      const item = reflections[index];
+      if (!item) return;
+      document.getElementById('reflection-modal-date').textContent = fmtDate(item.date);
+      document.getElementById('reflection-modal-title').textContent = item.title;
+      document.getElementById('reflection-modal-tags').innerHTML = item.tags.map(t => `<span class="article-tag">${t}</span>`).join('');
+      document.getElementById('reflection-modal-body').innerHTML = item.body.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('');
+      document.getElementById('reflection-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeReflectionModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('reflection-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function renderReflections() {
+      const container = document.getElementById('reflection-grid');
+      if (!container || !window.reflections) return;
+      container.innerHTML = reflections.slice(0, 2).map((item, index) => `
+        <div class="reflection-card" onclick="openReflection(${index})">
+          <div class="reflection-date">${fmtDate(item.date)}</div>
+          <h3 class="reflection-title">${item.title}</h3>
+          <p class="reflection-preview">${item.body.split('\n')[0].trim()}</p>
+          <div class="reflection-tags">${item.tags.map(t => `<span class="article-tag">${t}</span>`).join('')}</div>
+          <span class="reflection-readmore">点击展开全文 →</span>
+        </div>`).join('');
+    }
+
     // ── Search ──────────────────────────────────────────
     function openSearch() {
       document.getElementById('search-overlay').classList.add('active');
@@ -304,6 +404,9 @@
       loadFeatured();
       buildTagButtons();
       renderGrid();
+      renderFocus();
+      renderNews();
+      renderReflections();
 
       const inp = document.getElementById('search-input');
       let t;
@@ -311,7 +414,7 @@
     });
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') { closeSearch(); closeModal(); }
+      if (e.key === 'Escape') { closeSearch(); closeModal(); closeReflectionModal(); }
     });
   </script>
 </body>
