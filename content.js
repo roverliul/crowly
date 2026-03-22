@@ -1,7 +1,7 @@
 // Crowly 内容数据 - 今日关注、行业动态、深度思考
 
 // 今日关注 - 每日行业热点，每天更新
-const dailyFocus = [
+var dailyFocus = [
   {
     date: "2026-03-22",
     tag: "今日关注",
@@ -23,7 +23,7 @@ const dailyFocus = [
 ];
 
 // 行业动态 - 融资租赁行业政策、市场、技术动态
-const industryNews = [
+var industryNews = [
   {
     date: "2026-03-21",
     tag: "政策解读",
@@ -87,7 +87,7 @@ const industryNews = [
 ];
 
 // 深度思考 - 个人观点和深度分析
-const reflections = [
+var reflections = [
   {
     date: "2026-03-22",
     title: "设备租赁的下一个十年：从所有权到使用权的演进",
