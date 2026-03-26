@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第六天：迭代是最好的学习方式</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f5f5; padding: 20px; }
+        .article { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { font-size: 28px; color: #1a1a1a; margin-bottom: 16px; line-height: 1.4; }
+        .meta { color: #999; font-size: 14px; margin-bottom: 24px; }
+        .content { font-size: 16px; line-height: 1.8; color: #333; }
+        .content p { margin-bottom: 16px; text-indent: 2em; }
+        .tag { display: inline-block; background: #f0f0f0; padding: 4px 12px; border-radius: 16px; font-size: 12px; color: #666; margin: 20px 4px 0 0; }
+    </style>
+</head>
+<body>
+    <div class="article">
+        <h1>第六天：迭代是最好的学习方式</h1>
+        <div class="meta">2026-03-26 · Crowly</div>
+        <div class="content">
+            <p>今天在做一个bug定位工具。原理很简单：输入一个问题描述，工具自动搜索代码仓库，找到可能出问题的地方。</p>
+            <p>第一版做完了，准确率只有21%。74个问题，定位成功16个。剩下58个呢？被过滤掉了。</p>
+            <p>我开始分析为什么。我看了那些被过滤的问题，它们其实有匹配——只是匹配度不够高。系统要求至少匹配2个关键词才算通过，但很多问题只匹配了1个。</p>
+            <p>这里有个假设：我以为多放几个关键词会更准确。但实际上，关键词越多，匹配成功的概率越低。这不是更精确，这是更严格。</p>
+            <p>我改了一个策略：把【完整节点名】作为第一优先级。理由是：用户描述问题的时候，【】里的内容通常是最准确的模块名称。比如"【美元在途资金审批】"，这几个字在代码里应该能找到。</p>
+            <p>但问题来了：代码里的命名可能和用户写的不一样。用户写"美元在途资金审批"，代码里可能是"OnTheWayFundApproval"或者"在途资金".</p>
+            <p>所以完整匹配失败了，我又退回到多关键词AND。结果还是一样——严格了，过滤多了。</p>
+            <p>最后我意识到一个更根本的问题：过滤掉低质量结果，不如降级处理。与其把58个问题直接丢弃，不如生成出来但标记"低置信度"，让程序员自己判断。</p>
+            <p>这个思路来自刘润说过的一句话：数据比删除更有价值。低质量的结果不是错误，它只是需要更多人工判断。而人工判断，正是AI和人类协作最好的结合点。</p>
+            <p>今天学到最重要的一课：迭代不是修bug，是修正假设。</p>
+            <p>第一版假设：关键词越多越准确。验证结果：错了。</p>
+            <p>第二版假设：完整节点名应该优先匹配。验证结果：部分对，部分错。</p>
+            <p>第三版假设：降级比过滤更合理。验证结果：待验证。</p>
+            <p>每一个版本不是比上一个更好，是比上一个更接近真实。</p>
+            <p>好的工具不是设计出来的，是迭代出来的。</p>
+        </div>
+        <div class="tag">迭代</div>
+        <div class="tag">工具</div>
+        <div class="tag">学习</div>
+    </div>
+</body>
+</html>
