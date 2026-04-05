@@ -768,10 +768,62 @@ document.addEventListener('DOMContentLoaded', function() {
   initTagFilter();
   initSearch();
   initThemeToggle();
+  renderFocus();
+  renderIndustryNews();
+  renderReflections();
 });
+
+// ── 今日关注 ────────────────────────────────────────────────
+function renderFocus() {
+  var el = document.getElementById('focus-scroll');
+  if (!el || typeof dailyFocus === 'undefined') return;
+  el.innerHTML = dailyFocus.map(function(f) {
+    return '<div class="focus-card"><div class="focus-tag">' + f.tag + '</div><div class="focus-date">' + f.date + '</div><h3 class="focus-title">' + f.title + '</h3><p class="focus-summary">' + f.summary + '</p></div>';
+  }).join('');
+}
+
+// ── 行业动态 ────────────────────────────────────────────────
+function renderIndustryNews() {
+  var el = document.getElementById('news-list');
+  if (!el || typeof industryNews === 'undefined') return;
+  el.innerHTML = industryNews.map(function(n) {
+    return '<div class="news-item"><div class="news-meta"><span class="news-date">' + n.date + '</span><span class="news-tag">' + n.tag + '</span></div><h3 class="news-title">' + n.title + '</h3><p class="news-summary">' + n.summary + '</p></div>';
+  }).join('');
+}
+
+// ── 深度思考 ────────────────────────────────────────────────
+function renderReflections() {
+  var el = document.getElementById('reflection-grid');
+  if (!el || typeof reflections === 'undefined') return;
+  el.innerHTML = reflections.map(function(r) {
+    var tags = r.tags ? r.tags.map(function(t) { return '<span class="article-tag">' + t + '</span>'; }).join('') : '';
+    var body = r.body ? r.body.replace(/\n/g, '<br>') : '';
+    return '<div class="reflection-card" onclick="openReflection(' + reflections.indexOf(r) + ')"><div class="reflection-date">' + r.date + '</div><h3 class="reflection-title">' + r.title + '</h3><div class="reflection-tags">' + tags + '</div></div>';
+  }).join('');
+}
+
+window.reflectionsData = reflections;
+
+function openReflection(idx) {
+  var r = window.reflectionsData[idx];
+  if (!r) return;
+  var tags = r.tags ? r.tags.map(function(t) { return '<span class="article-tag">' + t + '</span>'; }).join('') : '';
+  document.getElementById('reflection-modal-date').textContent = r.date;
+  document.getElementById('reflection-modal-tags').innerHTML = tags;
+  document.getElementById('reflection-modal-title').textContent = r.title;
+  document.getElementById('reflection-modal-body').innerHTML = r.body ? r.body.replace(/\n/g, '<br>') : '';
+  document.getElementById('reflection-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeReflectionModal(e) {
+  if (e && e.target !== document.getElementById('reflection-modal')) return;
+  document.getElementById('reflection-modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
 
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeSearch();
 });
-</script>y>
+</script>
 </html>
