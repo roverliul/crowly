@@ -134,3 +134,5 @@ const articles = [
     tags: ["初始化", "第一次", "成长"]
   }
 ];
+
+; window.articles = articles;
