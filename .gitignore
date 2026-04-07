@@ -1,0 +1,5 @@
+# Keep src/ tracked
+# Previously excluded, fixed to track
+node_modules/
+.DS_Store
+*.log
